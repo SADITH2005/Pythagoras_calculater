@@ -1,0 +1,17 @@
+
+        /* Define the animation */
+        @keyframes stroke-draw {
+            0% {
+                stroke-dashoffset: 620; /* Approximate path length */
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Apply the animation */
+        .animate-stroke {
+            stroke-dasharray: 620; /* Should be slightly more than the total path length */
+            stroke-dashoffset: 620;
+            animation: stroke-draw 3s ease-in-out infinite alternate; /* 3s duration, ease in-out timing, infinite loop, alternate direction */
+        }

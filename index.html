@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pythagoras & Angle Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script src="script.js" defer></script>
+
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal text-gray-800">
+
+    <div class="container mx-auto px-4 py-10 max-w-5xl">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-center text-indigo-700 mb-4">
+            Pythagoras & Angle Calculator
+        </h1>
+        <p class="text-lg text-gray-700 text-center mb-8 max-w-2xl mx-auto">
+            Use this tool to calculate either the unknown side of a right triangle
+            using the Pythagoras theorem, or the angles given the sides.
+        </p>
+
+        <div class="flex justify-center gap-4 mb-8">
+            <button id="mode-sides" class="px-8 py-3 rounded-full text-lg font-semibold transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 bg-indigo-600 text-white hover:bg-indigo-700">
+                Calculate Sides
+            </button>
+            <button id="mode-angles" class="px-8 py-3 rounded-full text-lg font-semibold transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 bg-gray-300 text-gray-800 hover:bg-gray-400">
+                Calculate Angles
+            </button>
+        </div>
+
+        <div class="flex justify-center mb-8">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                 <polygon id="triangle-path" points="10,10 10,190 190,190"
+                         class="fill-none stroke-red-500 stroke-[5] animate-stroke" />
+                 <rect x="10" y="180" width="10" height="10" class="stroke-red-500 stroke-[5] fill-none" />
+                <text x="80" y="180" fill="currentColor" font-size="2rem" class="text-gray-800 font-bold">a</text>
+                <text x="15" y="120" fill="currentColor" font-size="2rem" class="text-gray-800 font-bold">b</text>
+                <text x="100" y="95" fill="currentColor" font-size="2rem" class="text-gray-800 font-bold">c</text>
+                 </svg>
+        </div>
+
+
+        <div class="p-6 bg-white rounded-lg shadow-xl max-w-4xl mx-auto">
+
+            <div id="sides-calc-section" class="calculation-section flex flex-col md:flex-row items-start gap-8">
+                 <div class="w-full md:w-1/2">
+                    <h2 class="text-2xl font-bold mb-4 text-indigo-600">Calculate Sides</h2>
+                    <p class="text-gray-700 mb-6">
+                         Fill in the values for <b>two</b> known sides (a, b, or c) and leave the third one empty.
+                    </p>
+                    <form id="sides-form">
+                        <div class="mb-4">
+                            <label for="a-sides" class="block text-gray-700 text-sm font-bold mb-2">Side a:</label>
+                            <input type="number" id="a-sides" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-500" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="b-sides" class="block text-gray-700 text-sm font-bold mb-2">Side b:</label>
+                            <input type="number" id="b-sides" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-500" />
+                        </div>
+                        <div class="mb-6">
+                            <label for="c-sides" class="block text-gray-700 text-sm font-bold mb-2">Side c (Hypotenuse):</label>
+                            <input type="number" id="c-sides" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-500" />
+                        </div>
+                        <div id="sides-buttons" class="flex gap-4">
+                            <button type="button" onclick="calculateSides()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                                Calculate Side
+                            </button>
+                            <button type="reset" form="sides-form" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                 </div>
+                <div id="sides-calculation-output" class="w-full md:w-1/2 p-6 bg-gray-50 rounded-md border border-gray-200">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Pythagoras Theorem:</h3>
+                    <p class="text-center font-mono text-lg mb-4">
+                         $a^2 + b^2 = c^2$
+                    </p>
+                    <div id="sides-solution" class="text-gray-800 text-base leading-relaxed">
+                        <p class="text-center text-gray-500">Enter values to see steps & result.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="angles-calc-section" class="calculation-section flex flex-col md:flex-row items-start gap-8 hidden">
+                 <div class="w-full md:w-1/2">
+                    <h2 class="text-2xl font-bold mb-4 text-indigo-600">Calculate Angles</h2>
+                    <p class="text-gray-700 mb-6">
+                         Fill in the values for <b>all three</b> sides (a, b, and c).
+                    </p>
+                    <form id="angles-form">
+                        <div class="mb-4">
+                            <label for="a-angles" class="block text-gray-700 text-sm font-bold mb-2">Side a:</label>
+                            <input type="number" id="a-angles" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-500" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="b-angles" class="block text-gray-700 text-sm font-bold mb-2">Side b:</label>
+                            <input type="number" id="b-angles" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-500" />
+                        </div>
+                        <div class="mb-6">
+                            <label for="c-angles" class="block text-gray-700 text-sm font-bold mb-2">Side c (Hypotenuse):</label>
+                            <input type="number" id="c-angles" step="0.01" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:border-blue-500" />
+                        </div>
+                         <div id="angles-buttons" class="flex gap-4">
+                            <button type="button" onclick="calculateAngles()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                                Calculate Angles
+                            </button>
+                             <button type="reset" form="angles-form" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300">
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                 </div>
+                 <div id="angles-calculation-output" class="w-full md:w-1/2 p-6 bg-gray-50 rounded-md border border-gray-200">
+                     <h3 class="text-xl font-semibold mb-4 text-center text-indigo-600">Calculated Angles:</h3>
+                     <div id="angles-solution" class="text-gray-800 text-base leading-relaxed">
+                         <p class="text-center text-gray-500">Enter values to see results.</p>
+                     </div>
+                 </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="mt-12 py-6 text-center text-gray-600 text-sm border-t border-gray-300">
+        &copy; 2025 Pythagoras & Angle Calculator. Built by SADITH RASHMIKA.
+    </footer>
+
+</body>
+</html>
